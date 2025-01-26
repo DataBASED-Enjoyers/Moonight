@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcs46hoqwaqnx"]
+
+[ext_resource type="Script" path="res://scenes/overworld.gd" id="1_7uh80"]
+[ext_resource type="Texture2D" uid="uid://brkqt28r8gqun" path="res://addons/kenney_prototype_textures/green/texture_08.png" id="1_jhcny"]
+
+[node name="Overworld" type="Node2D"]
+script = ExtResource("1_7uh80")
+
+[node name="MapSprite" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(1.125, 0.632813)
+texture = ExtResource("1_jhcny")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+offset_right = 1152.0
+offset_bottom = 647.0
+color = Color(0.485703, 0.485704, 0.485703, 1)
+
+[node name="PlayerSpawnPosition" type="Marker2D" parent="."]

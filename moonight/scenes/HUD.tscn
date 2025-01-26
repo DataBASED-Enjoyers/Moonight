@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://rner7uaefy21"]
+
+[ext_resource type="Script" path="res://HUD.gd" id="1_prp7v"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_prp7v")
+
+[node name="UI_Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="UI_Control"]
+offset_right = 4.0
+offset_bottom = 27.0
+
+[node name="BuddyHealthBar" type="ProgressBar" parent="UI_Control"]
+offset_right = 4.0
+offset_bottom = 27.0

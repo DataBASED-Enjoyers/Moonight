@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxi2vffmxt3lq"]
+
+[ext_resource type="PackedScene" uid="uid://dk6cwfylxh3vw" path="res://scenes/Player.tscn" id="1_8v8yp"]
+[ext_resource type="Texture2D" uid="uid://brkqt28r8gqun" path="res://addons/kenney_prototype_textures/green/texture_08.png" id="1_ygwtw"]
+[ext_resource type="PackedScene" uid="uid://cqhidi20ogkdp" path="res://scenes/TrainingBuddy.tscn" id="2_rwhv3"]
+
+[sub_resource type="TileSet" id="TileSet_ab7c7"]
+tile_shape = 1
+tile_size = Vector2i(64, 32)
+terrain_set_0/mode = 0
+
+[node name="Node2D" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+offset_right = 1152.0
+offset_bottom = 647.0
+color = Color(0.485703, 0.485704, 0.485703, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(1.125, 0.632813)
+texture = ExtResource("1_ygwtw")
+
+[node name="Node2D" parent="." instance=ExtResource("1_8v8yp")]
+position = Vector2(147, 165)
+scale = Vector2(2, 2)
+
+[node name="Node2D2" parent="." instance=ExtResource("2_rwhv3")]
+position = Vector2(361, 161)
+scale = Vector2(2, 2)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+visible = false
+tile_set = SubResource("TileSet_ab7c7")
