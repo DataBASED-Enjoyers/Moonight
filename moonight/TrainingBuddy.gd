@@ -1,22 +1,12 @@
 extends CharacterBody2D  # Or Node2D if applicable
 
-var max_health: int = 100
 var last_move_direction: Vector2 = Vector2.LEFT  # Default facing right
-var current_health: int = max_health
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var health_label: Label = $HealthLabel
 
 func _ready():
-	update_health_display()
+	$CanvasLayer/ProgressBar.max_value = GameManager.buddy_max_health
+	#$Area2D.body_entered.connect(_on_attack_hit)
 	animated_sprite.play("Idle_Front") 
-	
-func take_damage(amount: int):
-	current_health = clamp(current_health - amount, 0, max_health)
-	if current_health <= 0:
-		current_health = 0
-		play_animation("Death", last_move_direction)
-	update_health_display()
-	# Optional: Add visual feedback or check for death
 
 func play_animation(base_animation_name: String, direction: Vector2):
 	var dir = direction.normalized()
@@ -39,11 +29,14 @@ func play_animation(base_animation_name: String, direction: Vector2):
 			
 	if animated_sprite.animation != animation_name:
 		animated_sprite.play(animation_name)
-
-func update_health_display():
-	health_label.text = str(current_health)
+	
+func take_damage(amount: int):
+	GameManager.update_health("buddy", -amount)
+	if GameManager.buddy_health  <= 0:
+		die()
+	# Optional: Add visual feedback or check for death
 	
 func die():
-	queue_free()
 	play_animation("Death", last_move_direction)
-	print("TrainingBuddy defeated!")
+	#queue_free()
+	print("Training Buddy defeated!")

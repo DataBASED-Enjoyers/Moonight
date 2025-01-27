@@ -2,20 +2,17 @@ extends CharacterBody2D
 
 @export var speed:= 200.0
 
-var max_health: int = 100
-var current_health: int = max_health
 var last_move_direction: Vector2 = Vector2.RIGHT  # Default facing right
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_area: Area2D = $AttackArea
-@onready var health_label: Label = $HealthLabel
 var is_attacking = false
 var attack_cooldown_time = 2.0  # Time between attacks
 var attack_damage = 10
 var attack_timer = 0.5
 
 func _ready():
-	$CanvasLayer/ProgressBar.max_value = max_health
-	$Area2D.body_entered.connect(_on_attack_hit)
+	$CanvasLayer/ProgressBar.max_value = GameManager.player_max_health
+	$AttackArea.body_entered.connect(_on_attack_hit)
 
 func _physics_process(delta):
 	var input_vector = Vector2.ZERO
@@ -91,19 +88,14 @@ func play_animation(base_animation_name: String, direction: Vector2):
 		animated_sprite.play(animation_name)
 
 func _on_attack_hit(body: Node2D) -> void:
-	if body.has_method("take_damage"):
+	if body.has_method("take_damage") and body != self:
 		body.take_damage(attack_damage)
 		
 func take_damage(amount: int):
-	current_health = clamp(current_health - amount, 0, max_health)
-	if current_health <= 0:
-		current_health = 0
-		play_animation("Death", last_move_direction)
-	update_health_display()
+	GameManager.update_health("player", -amount)
+	if GameManager.player_health <= 0:
+		die()
 	# Optional: Add visual feedback or check for death
-
-func update_health_display():
-	health_label.text = str(current_health)
 
 func die():
 	queue_free()

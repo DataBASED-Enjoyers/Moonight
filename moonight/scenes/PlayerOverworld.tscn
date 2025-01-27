@@ -1,6 +1,6 @@
-[gd_scene load_steps=132 format=3 uid="uid://dqdhagg1xh0x1"]
+[gd_scene load_steps=131 format=3 uid="uid://dqdhagg1xh0x1"]
 
-[ext_resource type="Script" path="res://Player.gd" id="1_ghxgd"]
+[ext_resource type="Script" path="res://PlayerOverlord.gd" id="1_e6it2"]
 [ext_resource type="Texture2D" uid="uid://c4uxp6kmf6xiq" path="res://assets/Sprites/Player/Player_Spritesheet.png" id="2_rxwt1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mwcio"]
@@ -981,11 +981,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5j8da"]
 size = Vector2(15, 41)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_myiar"]
-size = Vector2(29.5, 14)
-
 [node name="PlayerOverworld" type="CharacterBody2D"]
-script = ExtResource("1_ghxgd")
+script = ExtResource("1_e6it2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_8bvlk")
@@ -998,10 +995,3 @@ one_way_collision_margin = 0.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = false
-
-[node name="AttackArea" type="Area2D" parent="."]
-monitoring = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-position = Vector2(11.25, 13)
-shape = SubResource("RectangleShape2D_myiar")
