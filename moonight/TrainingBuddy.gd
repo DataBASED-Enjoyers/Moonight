@@ -1,10 +1,18 @@
-extends CharacterBody2D  # Or Node2D if applicable
+extends Entity 
 
-var last_move_direction: Vector2 = Vector2.LEFT  # Default facing right
+@onready var buddy_speed = speed
+@onready var buddy_max_health = max_health
+@onready var buddy_entity_types = entity_types
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var health_processor = get_node("/root/HealthProcessor")
+@onready var status_processor = get_node("/root/StatusProcessor")
+var last_move_direction: Vector2 = Vector2.RIGHT  # Default facing right
+var buddy_health = max_health
 
 func _ready():
-	$CanvasLayer/ProgressBar.max_value = GameManager.buddy_max_health
+	print("Training Buddy ready!")
+	health_processor.register_entity(name, buddy_max_health)
+	status_processor.register_entity(name, buddy_entity_types)
 	#$Area2D.body_entered.connect(_on_attack_hit)
 	animated_sprite.play("Idle_Front") 
 
@@ -31,12 +39,19 @@ func play_animation(base_animation_name: String, direction: Vector2):
 		animated_sprite.play(animation_name)
 	
 func take_damage(amount: int):
-	GameManager.update_health("buddy", -amount)
-	if GameManager.buddy_health  <= 0:
+	buddy_health = HealthProcessor \
+		.process_health_change(name, amount, true)
+	if buddy_health <= 0:
 		die()
-	# Optional: Add visual feedback or check for death
+	
+func heal(amount: int):
+	buddy_health = HealthProcessor \
+		.process_health_change(name, amount, false)
 	
 func die():
 	play_animation("Death", last_move_direction)
-	#queue_free()
+	print("%s has died!" % name)
 	print("Training Buddy defeated!")
+	HealthProcessor.deregister_entity(get_path())
+	StatusProcessor.deregister_entity(get_path())
+	#queue_free()

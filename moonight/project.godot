@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Moonight"
-run/main_scene="res://scenes/GameRoot.tscn"
+run/main_scene="res://scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -20,7 +20,7 @@ config/icon="res://icon.svg"
 HealthProcessor="*res://HealthProcessor.gd"
 StatusProcessor="*res://StatusProcessor.gd"
 Logger="*res://Logger.gd"
-GameRoot="*res://scenes/GameRoot.gd"
+GameManager="*res://scenes/GameManager.gd"
 
 [input]
 

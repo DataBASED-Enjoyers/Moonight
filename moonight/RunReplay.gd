@@ -8,7 +8,7 @@ func log_run_event(event: Dictionary):
 func handle_replay_event(event):
 	# Example: Handle a scene transition during replay
 	if event.type == "scene_transition":
-		GameRoot.load_scene(event.scene_path)
+		GameManager.load_scene(event.scene_path)
 	elif event.type == "player_action":
 		# Example: Trigger specific player action
 		Logger.log("Replaying player action: %s" % str(event.action), Logger.LogLevel.DEBUG)

@@ -1,18 +1,25 @@
-extends CharacterBody2D
+extends Entity
 
-@export var speed:= 200.0
-
-var last_move_direction: Vector2 = Vector2.RIGHT  # Default facing right
+@onready var player_speed = speed
+@onready var player_max_health = max_health
+@onready var player_entity_types = entity_types
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_area: Area2D = $AttackArea
+@onready var max_health_meter = $CanvasLayer/ProgressBar
+@onready var health_processor = get_node("/root/HealthProcessor")
+@onready var status_processor = get_node("/root/StatusProcessor")
+
+var player_health = max_health
+var last_move_direction: Vector2 = Vector2.RIGHT  # Default facing right
 var is_attacking = false
 var attack_cooldown_time = 2.0  # Time between attacks
 var attack_damage = 10
 var attack_timer = 0.5
 
 func _ready():
-	$CanvasLayer/ProgressBar.max_value = GameManager.player_max_health
-	$AttackArea.body_entered.connect(_on_attack_hit)
+	print("Player ready!")
+	health_processor.register_entity(name, player_max_health)
+	status_processor.register_entity(name, player_entity_types)
 
 func _physics_process(delta):
 	var input_vector = Vector2.ZERO
@@ -64,7 +71,6 @@ func attack():
 	attack_area.rotation = angle
 	
 	play_animation("Attack_Thrust", last_move_direction)
-
 	
 func play_animation(base_animation_name: String, direction: Vector2):
 	var dir = direction.normalized()
@@ -92,12 +98,19 @@ func _on_attack_hit(body: Node2D) -> void:
 		body.take_damage(attack_damage)
 		
 func take_damage(amount: int):
-	GameManager.update_health("player", -amount)
-	if GameManager.player_health <= 0:
+	player_health = HealthProcessor \
+		.process_health_change(name, amount, true)
+	if entity_health <= 0:
 		die()
-	# Optional: Add visual feedback or check for death
+	
+func heal(amount: int):
+	player_health = HealthProcessor \
+		.process_health_change(name, amount, false)
 
 func die():
-	queue_free()
 	play_animation("Death", last_move_direction)
+	print("%s has died!" % name)
 	print("Player defeated!")
+	HealthProcessor.deregister_entity(name)
+	StatusProcessor.deregister_entity(get_name)
+	#queue_free()

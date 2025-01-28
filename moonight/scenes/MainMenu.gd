@@ -1,11 +1,15 @@
 extends CanvasLayer
 
-func _ready():
-	$VBoxContainer/StartButton.pressed.connect(_on_start_game_pressed)
-	$VBoxContainer/QuitButton.pressed.connect(_on_quit_pressed)
+@onready var start_button = $VBoxContainer/StartGameButton
+@onready var quit_button = $VBoxContainer/QuitButton
 
-func _on_start_game_pressed():
-	GameRoot.start_game()
+func _ready():
+	print_tree()
+	start_button.pressed.connect(_on_start_run_pressed)
+	quit_button.pressed.connect(_on_quit_pressed)
+
+func _on_start_run_pressed():
+	GameManager.start_run()
 
 func _on_quit_pressed():
-	get_tree().quit()
+	GameManager.quit_game()
