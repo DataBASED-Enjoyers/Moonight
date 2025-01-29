@@ -8,7 +8,7 @@ var entity_health = max_health
 
 func _ready():
 	HealthProcessor.register_entity(get_path(), max_health)
-	StatusProcessor.register_entity(get_path(), entity_types)
+	StatusProcessor.register_entity(get_path())
 
 func take_damage(amount: int):
 	entity_health = HealthProcessor \
