@@ -21,6 +21,7 @@ HealthProcessor="*res://HealthProcessor.gd"
 StatusProcessor="*res://StatusProcessor.gd"
 Logger="*res://Logger.gd"
 GameManager="*res://scenes/GameManager.gd"
+EventBus="*res://EventBus.gd"
 
 [input]
 

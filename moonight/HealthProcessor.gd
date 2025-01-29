@@ -1,84 +1,80 @@
+# HealthProcessor.gd
 extends Node
 
-# Signal definition
-signal health_changed(entity_id: String, new_health: int, new_max_health: int)
-signal death(entity_id: String)
+class EntityHealth:
+	var current: int
+	var max: int
+	
+	func _init(p_max: int, p_current: int = -1) -> void:
+		max = p_max
+		current = p_current if p_current != -1 else p_max
 
-# Centralized health registry
-var entity_health = {}
+var _entities: Dictionary = {}  # entity_id: EntityHealth
 
-# Add an entity to the registry
-func register_entity(
-	entity_id: String, 
-	max_health: int, 
-	current_health: int = max_health
-	):
-	if entity_id in entity_health:
-		print("Entity %s is already registered!" % entity_id)
+func register_entity(entity_id: String, max_health: int, current_health: int = -1) -> void:
+	if _entities.has(entity_id):
+		Logger.log("Duplicate entity registration: %s" % entity_id, Logger.LogLevel.WARN)
 		return
-	entity_health[entity_id] = {"current": current_health, "max": max_health}
-	print("Registered entity %s with max health %d and current health %d" % \
-		[entity_id, max_health, current_health])
+	
+	_entities[entity_id] = EntityHealth.new(max_health, current_health)
+	EventBus.emit_signal("entity_registered", entity_id)
+	_update_ui(entity_id)
 
-# Remove an entity from the registry
-func deregister_entity(entity_id: String):
-	if entity_id in entity_health:
-		entity_health.erase(entity_id)
-		print("Deregistered entity %s" % entity_id)
+func deregister_entity(entity_id: String) -> void:
+	if _entities.erase(entity_id):
+		EventBus.emit_signal("entity_deregistered", entity_id)
 	else:
-		print("Entity %s not found in HealthProcessor!" % entity_id)
+		Logger.log("Failed to deregister unknown entity: %s" % \
+			entity_id, Logger.LogLevel.WARN)
 
-# Process health changes
-func process_health_change(
-	entity_id: String, 
-	base_amount: float, 
-	is_damage: bool = true
-	):
-	if entity_id not in entity_health:
-		print("Entity %s not registered in HealthProcessor!" % entity_id)
+func apply_damage(source_id: String, target_id: String, base_damage: int) -> void:
+	if not _entities.has(target_id):
+		Logger.log("Damage target not found: %s" % target_id, Logger.LogLevel.ERROR)
 		return
-
-	var health_data = entity_health[entity_id]
-	var effect_type = "damage" if is_damage else "heal"
-
-	# Apply status effects
-	var final_amount = StatusProcessor.apply_status_effects(
-		entity_id, 
-		base_amount, 
-		effect_type
-	)
-
-	# Apply the change
-	health_data["current"] += -final_amount if is_damage \
-							else final_amount
-	health_data["current"] = clamp(
-		health_data["current"], 
-		-health_data["max"], 
-		health_data["max"]
-	)
 	
-	emit_signal(
-		"health_changed", 
-		entity_id, 
-		health_data["current"],
-		health_data["max"]
-	)
-
-	print("Entity %s health updated: %d/%d" % [
-		entity_id, 
-		health_data["current"], 
-		health_data["max"]
-		]
-	)
+	var final_damage = _calculate_final_value(target_id, base_damage, "damage")
+	_entities[target_id].current = clamp(_entities[target_id].current - final_damage, 0, _entities[target_id].max)
 	
-		
-	return health_data["current"]
+	EventBus.emit_signal("damage_applied", source_id, target_id, final_damage)
+	EventBus.emit_signal("health_changed", target_id, _entities[target_id].current, _entities[target_id].max)
+	_update_ui(target_id)
+	
+	if _entities[target_id].current <= 0:
+		_handle_death(target_id)
 
-# Handle entity death
-func on_entity_death(entity_id: String):
-	print("Entity %s has died!" % entity_id)
+func apply_healing(source_id: String, target_id: String, base_healing: int) -> void:
+	if not _entities.has(target_id):
+		Logger.log("Healing target not found: %s" % target_id, Logger.LogLevel.ERROR)
+		return
+	
+	var final_healing = _calculate_final_value(target_id, base_healing, "heal")
+	_entities[target_id].current = clamp(_entities[target_id].current + final_healing, 0, _entities[target_id].max)
+	
+	EventBus.emit_signal("healing_applied", source_id, target_id, final_healing)
+	EventBus.emit_signal("health_changed", target_id, _entities[target_id].current, _entities[target_id].max)
+	_update_ui(target_id)
+
+func _calculate_final_value(entity_id: String, base_value: int, effect_type: String) -> int:
+	var request := StatusEffectRequest.new(entity_id, base_value, effect_type)
+	EventBus.emit_signal("status_effect_requested", request)
+	return request.final_value
+
+func _handle_death(entity_id: String) -> void:
+	EventBus.emit_signal("entity_died", entity_id)
 	deregister_entity(entity_id)
-	var entity = get_tree().get_node(entity_id)
-	if entity and entity.has_method("die"):
-		emit_signal("death", entity_id)
-		entity.die()
+
+func _update_ui(entity_id: String) -> void:
+	var health = _entities[entity_id]
+	EventBus.emit_signal("health_updated", entity_id, health.current, health.max)
+
+class StatusEffectRequest:
+	var entity_id: String
+	var base_value: int
+	var effect_type: String
+	var final_value: int
+	
+	func _init(p_entity_id: String, p_base_value: int, p_effect_type: String) -> void:
+		entity_id = p_entity_id
+		base_value = p_base_value
+		effect_type = p_effect_type
+		final_value = p_base_value
