@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://c2nr1eknmqxi6"]
 
-[ext_resource type="Script" path="res://entrance.gd" id="1_e5g0t"]
+[ext_resource type="Script" path="res://scripts/Entrance.gd" id="1_2obov"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_h64h1"]
 
 [node name="Entrance" type="Area2D"]
-script = ExtResource("1_e5g0t")
+script = ExtResource("1_2obov")
 location_name = null
 scene_to_load = null
 

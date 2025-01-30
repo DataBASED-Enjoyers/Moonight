@@ -17,11 +17,14 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-HealthProcessor="*res://HealthProcessor.gd"
-StatusProcessor="*res://StatusProcessor.gd"
-Logger="*res://Logger.gd"
-GameManager="*res://scenes/GameManager.gd"
-EventBus="*res://EventBus.gd"
+HealthProcessor="*res://autoloads/HealthProcessor.gd"
+StatusProcessor="*res://autoloads/StatusProcessor.gd"
+Logger="*res://autoloads/Logger.gd"
+GameManager="*res://autoloads/GameManager.gd"
+EventBus="*res://autoloads/EventBus.gd"
+PlayerDataManager="*res://autoloads/PlayerDataManager.gd"
+BattleReplay="*res://autoloads/BattleReplay.gd"
+RunReplay="*res://autoloads/RunReplay.gd"
 
 [input]
 

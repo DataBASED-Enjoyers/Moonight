@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EntityData" load_steps=3 format=3 uid="uid://dcc02fvlo18om"]
+
+[ext_resource type="Script" path="res://resources/EntityData.gd" id="1_6il5g"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k0eah"]
+
+[resource]
+script = ExtResource("1_6il5g")
+id = "training_buddy"
+display_name = "Training Buddy"
+health = 200
+speed = 150
+base_damage = 15
+attack_cooldown = 1.0
+attack_range = 50.0
+animations = SubResource("AnimationLibrary_k0eah")
+scale = 1.0
+color = Color(1, 1, 1, 1)
+is_playable = false

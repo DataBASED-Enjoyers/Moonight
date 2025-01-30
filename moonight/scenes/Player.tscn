@@ -1,6 +1,6 @@
 [gd_scene load_steps=132 format=3 uid="uid://dk6cwfylxh3vw"]
 
-[ext_resource type="Script" path="res://Player.gd" id="1_a2er5"]
+[ext_resource type="Script" path="res://entities/Player.gd" id="1_a2er5"]
 [ext_resource type="Texture2D" uid="uid://c4uxp6kmf6xiq" path="res://assets/Sprites/Player/Player_Spritesheet.png" id="2_dhhj2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mwcio"]
@@ -988,6 +988,10 @@ size = Vector2(29.5, 14)
 script = ExtResource("1_a2er5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_8bvlk")
+animation = &"Attack_Thrust_Back"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_8bvlk")
 animation = &"Attack_Thrust_Back"
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=131 format=3 uid="uid://cqhidi20ogkdp"]
 
-[ext_resource type="Script" path="res://TrainingBuddy.gd" id="1_0lhps"]
+[ext_resource type="Script" path="res://entities/TrainingBuddy.gd" id="1_0lhps"]
 [ext_resource type="Texture2D" uid="uid://c4uxp6kmf6xiq" path="res://assets/Sprites/Player/Player_Spritesheet.png" id="2_gtpeq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mwcio"]

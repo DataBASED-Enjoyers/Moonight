@@ -1,6 +1,6 @@
 [gd_scene load_steps=131 format=3 uid="uid://dqdhagg1xh0x1"]
 
-[ext_resource type="Script" path="res://PlayerOverworld.gd" id="1_etiit"]
+[ext_resource type="Script" path="res://entities/PlayerOverworld.gd" id="1_etiit"]
 [ext_resource type="Texture2D" uid="uid://c4uxp6kmf6xiq" path="res://assets/Sprites/Player/Player_Spritesheet.png" id="2_rxwt1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mwcio"]
